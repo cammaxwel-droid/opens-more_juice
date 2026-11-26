@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>my_new_tool — OSINT Plugin Workbench</title>
+  <meta name="description" content="Dark-mode operational workbench for my_new_tool FastAPI OSINT plugins." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to workbench</a>
+
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-cluster">
+        <span class="brand-mark" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="2" y="2" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.75" />
+            <line x1="10" y1="5" x2="10" y2="15" stroke="currentColor" stroke-width="1.75" />
+            <line x1="5" y1="10" x2="15" y2="10" stroke="currentColor" stroke-width="1.75" />
+          </svg>
+        </span>
+        <div class="brand-titles">
+          <div class="brand-heading-row">
+            <h1 class="brand-name">MY_NEW_TOOL</h1>
+            <span id="service-version" class="mono-tag">v0.2.0</span>
+          </div>
+          <span class="brand-subtitle">OSINT Plugin Workbench</span>
+        </div>
+      </div>
+
+      <div class="topbar-controls">
+        <div id="connection-pill" class="connection-pill" data-state="checking" role="status" aria-live="polite">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="connection-label" class="connection-label">Checking 127.0.0.1:8080</span>
+        </div>
+
+        <button type="button" id="refresh-plugins-btn" class="btn btn-secondary btn-sm">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M13.5 8A5.5 5.5 0 1 1 11.8 4M13.5 2.5V5.5H10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span>Refresh plugins</span>
+        </button>
+
+        <a id="openapi-docs-link" href="http://127.0.0.1:8080/docs" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-sm">
+          <span>Open API docs</span>
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M6 3.5H3.5V12.5H12.5V10M9.5 3.5H12.5V6.5M12.2 3.8L7.5 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </a>
+      </div>
+    </header>
+
+    <div class="workbench">
+      <aside class="sidebar" aria-label="Registered plugins and schema">
+        <section class="sidebar-section" aria-labelledby="plugins-heading">
+          <div class="section-header-row">
+            <h2 id="plugins-heading" class="section-display-title">Plugins</h2>
+            <span id="plugin-count-badge" class="count-readout">0 loaded</span>
+          </div>
+
+          <div class="search-field-wrap">
+            <label for="plugin-filter-input" class="sr-only">Filter plugins by name or description</label>
+            <svg class="search-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5" />
+              <line x1="10.5" y1="10.5" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+            <input
+              type="search"
+              id="plugin-filter-input"
+              class="input input-search"
+              placeholder="Filter plugins..."
+              autocomplete="off"
+            />
+          </div>
+
+          <ul id="plugin-list" class="plugin-list" role="listbox" aria-label="Available OSINT plugins">
+            <li class="skeleton-row" aria-hidden="true"></li>
+            <li class="skeleton-row" aria-hidden="true"></li>
+            <li class="skeleton-row" aria-hidden="true"></li>
+          </ul>
+        </section>
+
+        <section class="sidebar-section schema-section" aria-labelledby="schema-heading">
+          <div class="section-header-row">
+            <h2 id="schema-heading" class="section-display-title">Schema Contract</h2>
+            <span id="schema-version-badge" class="mono-tag">--</span>
+          </div>
+          <div id="schema-inspector" class="schema-inspector">
+            <p class="muted-copy">Select a plugin to inspect its output fields and default options.</p>
+          </div>
+        </section>
+      </aside>
+
+      <main id="main-content" class="workspace" tabindex="-1">
+        <div class="mobile-plugin-bar" aria-label="Mobile plugin selector">
+          <div class="mobile-plugin-select-row">
+            <label for="mobile-plugin-select" class="mobile-bar-label">Active Plugin</label>
+            <select id="mobile-plugin-select" class="input input-mono mobile-select"></select>
+          </div>
+          <details class="mobile-schema-details">
+            <summary class="mobile-schema-summary">
+              <span class="summary-title-with-chevron">
+                <svg class="chevron-icon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span>Inspect Schema Contract</span>
+              </span>
+              <span id="mobile-schema-version" class="mono-tag">v0.1.0</span>
+            </summary>
+            <div id="mobile-schema-inspector" class="mobile-schema-body"></div>
+          </details>
+        </div>
+
+        <div id="backend-error-banner" class="error-banner" role="alert" hidden>
+          <div class="error-banner-body">
+            <div class="error-banner-title-row">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" />
+                <line x1="8" y1="5" x2="8" y2="8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                <circle cx="8" cy="11.2" r="0.8" fill="currentColor" />
+              </svg>
+              <strong id="backend-error-title">FastAPI server unreachable at http://127.0.0.1:8080</strong>
+            </div>
+            <p id="backend-error-detail" class="error-banner-detail">
+              Start the backend microservice in a terminal: <code>python -m my_new_tool --server 127.0.0.1:8080</code>
+            </p>
+          </div>
+          <div class="error-banner-actions">
+            <button type="button" id="copy-server-cmd-btn" class="btn btn-secondary btn-sm">Copy start command</button>
+            <button type="button" id="retry-connection-btn" class="btn btn-primary btn-sm">Retry connection</button>
+          </div>
+        </div>
+
+        <section class="plugin-header-strip" aria-labelledby="active-plugin-title">
+          <div class="plugin-header-main">
+            <div class="plugin-title-line">
+              <h2 id="active-plugin-title" class="active-plugin-title">Loading plugin...</h2>
+              <code id="active-plugin-route" class="route-pill">POST /plugins/.../run</code>
+            </div>
+            <p id="active-plugin-description" class="plugin-description">
+              Connecting to FastAPI plugin registry via local proxy.
+            </p>
+          </div>
+          <div class="plugin-header-actions">
+            <button type="button" id="copy-curl-btn" class="btn btn-secondary btn-sm">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <rect x="5.5" y="5.5" width="7.5" height="7.5" rx="1" stroke="currentColor" stroke-width="1.4" />
+                <path d="M3 10.5V3.5C3 3.22 3.22 3 3.5 3H10.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+              </svg>
+              <span>Copy cURL</span>
+            </button>
+          </div>
+        </section>
+
+        <form id="run-form" class="composer-zone" novalidate>
+          <div class="composer-grid">
+            <div class="composer-col">
+              <div class="field-header-row">
+                <label for="targets-input" class="field-label">
+                  Targets
+                  <span id="target-count-pill" class="inline-metric">0 targets</span>
+                </label>
+                <div class="inline-actions">
+                  <button type="button" id="load-sample-btn" class="btn btn-ghost btn-xs">Load sample targets</button>
+                  <button type="button" id="import-file-btn" class="btn btn-ghost btn-xs">Import .txt</button>
+                  <button type="button" id="clear-targets-btn" class="btn btn-ghost btn-xs">Clear targets</button>
+                  <input type="file" id="target-file-input" accept=".txt,.csv,text/plain" hidden />
+                </div>
+              </div>
+              <textarea
+                id="targets-input"
+                class="textarea-mono"
+                rows="6"
+                spellcheck="false"
+                placeholder="Enter one target per line (domains, URLs, usernames, or strings)..."
+                aria-describedby="targets-hint"
+              ></textarea>
+              <div id="targets-hint" class="field-hint-row">
+                <span>One identifier per line; blank lines are ignored.</span>
+                <span class="kbd-hint"><kbd>Ctrl</kbd> + <kbd>Enter</kbd> to run</span>
+              </div>
+            </div>
+
+            <div class="composer-col">
+              <div class="field-header-row">
+                <span class="field-label" id="options-group-label">Plugin Options</span>
+                <button type="button" id="add-custom-option-btn" class="btn btn-ghost btn-xs">Add option</button>
+              </div>
+
+              <div id="default-options-container" class="options-stack" role="group" aria-labelledby="options-group-label">
+                <p class="muted-copy">No default options declared.</p>
+              </div>
+
+              <div id="custom-options-container" class="custom-options-stack"></div>
+
+              <details class="runtime-details">
+                <summary class="runtime-summary">
+                  <span class="summary-title-with-chevron">
+                    <svg class="chevron-icon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                      <path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <span>Runtime &amp; Network Overrides</span>
+                  </span>
+                  <span class="runtime-summary-meta">timeout, concurrency, proxy</span>
+                </summary>
+                <div class="runtime-grid">
+                  <div class="form-field">
+                    <label for="concurrency-input" class="sub-label">Concurrency</label>
+                    <input type="number" id="concurrency-input" class="input input-mono" min="1" max="200" step="1" value="10" />
+                  </div>
+                  <div class="form-field">
+                    <label for="timeout-input" class="sub-label">Timeout (s)</label>
+                    <input type="number" id="timeout-input" class="input input-mono" min="1" max="600" step="1" value="100" />
+                  </div>
+                  <div class="form-field runtime-field-wide">
+                    <label for="proxy-input" class="sub-label">Proxy URL (optional)</label>
+                    <input type="text" id="proxy-input" class="input input-mono" spellcheck="false" placeholder="socks5://127.0.0.1:1080" />
+                  </div>
+                </div>
+              </details>
+            </div>
+          </div>
+
+          <div class="action-bar">
+            <div class="action-bar-left">
+              <button type="submit" id="run-plugin-btn" class="btn btn-primary">
+                <span id="run-btn-spinner" class="spinner" hidden aria-hidden="true"></span>
+                <svg id="run-btn-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4.5 3.2L12.8 8L4.5 12.8V3.2Z" fill="currentColor" />
+                </svg>
+                <span id="run-btn-label">Run plugin</span>
+              </button>
+
+              <button type="button" id="abort-run-btn" class="btn btn-secondary" hidden>
+                Abort run
+              </button>
+
+              <button type="button" id="reset-defaults-btn" class="btn btn-ghost">
+                Reset defaults
+              </button>
+            </div>
+
+            <p id="form-feedback" class="form-feedback" role="status" aria-live="polite"></p>
+          </div>
+        </form>
+
+        <section class="results-zone" aria-labelledby="results-heading">
+          <h2 id="results-heading" class="sr-only">Execution Telemetry and Results</h2>
+
+          <div class="telemetry-strip" aria-label="Latest execution metrics">
+            <div class="telemetry-cell">
+              <span class="telemetry-label">Targets Queried</span>
+              <strong id="metric-targets" class="telemetry-value">0</strong>
+            </div>
+            <div class="telemetry-cell">
+              <span class="telemetry-label">Total Findings</span>
+              <strong id="metric-findings" class="telemetry-value">0</strong>
+            </div>
+            <div class="telemetry-cell">
+              <span class="telemetry-label">Target Errors</span>
+              <strong id="metric-errors" class="telemetry-value">0</strong>
+            </div>
+            <div class="telemetry-cell">
+              <span class="telemetry-label">Wall Duration</span>
+              <strong id="metric-duration" class="telemetry-value">--</strong>
+            </div>
+          </div>
+
+          <div class="results-toolbar">
+            <div class="view-tabs" role="tablist" aria-label="Result presentation mode">
+              <button
+                type="button"
+                role="tab"
+                id="tab-table"
+                class="view-tab"
+                aria-selected="true"
+                aria-controls="panel-results"
+                data-view="table"
+              >
+                Table view
+              </button>
+              <button
+                type="button"
+                role="tab"
+                id="tab-grouped"
+                class="view-tab"
+                aria-selected="false"
+                aria-controls="panel-results"
+                data-view="grouped"
+                tabindex="-1"
+              >
+                Target groups
+              </button>
+              <button
+                type="button"
+                role="tab"
+                id="tab-json"
+                class="view-tab"
+                aria-selected="false"
+                aria-controls="panel-results"
+                data-view="json"
+                tabindex="-1"
+              >
+                Raw JSON
+              </button>
+            </div>
+
+            <div class="export-actions" aria-label="Export results">
+              <button type="button" id="export-json-btn" class="btn btn-secondary btn-xs" disabled>Export JSON</button>
+              <button type="button" id="export-csv-btn" class="btn btn-secondary btn-xs" disabled>Export CSV</button>
+              <button type="button" id="export-txt-btn" class="btn btn-secondary btn-xs" disabled>Export TXT</button>
+            </div>
+          </div>
+
+          <div id="panel-results" class="results-viewport" role="tabpanel" aria-labelledby="tab-table">
+            <div class="empty-state">
+              <div class="empty-icon" aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.5" />
+                  <line x1="12" y1="3.5" x2="12" y2="7" stroke="currentColor" stroke-width="1.5" />
+                  <line x1="12" y1="17" x2="12" y2="20.5" stroke="currentColor" stroke-width="1.5" />
+                  <line x1="3.5" y1="12" x2="7" y2="12" stroke="currentColor" stroke-width="1.5" />
+                  <line x1="17" y1="12" x2="20.5" y2="12" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+              </div>
+              <h3 class="empty-title">Ready to execute plugin batch</h3>
+              <p class="empty-copy">
+                Choose an OSINT plugin in the left rail, supply one or more targets above, or load sample targets to run an immediate check against <code>127.0.0.1:8080</code>.
+              </p>
+              <div class="empty-actions">
+                <button type="button" id="empty-sample-run-btn" class="btn btn-primary btn-sm">Run sample batch</button>
+                <button type="button" id="empty-load-sample-btn" class="btn btn-secondary btn-sm">Populate sample targets</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="history-strip" class="history-strip" aria-labelledby="history-heading" hidden>
+          <div class="history-header-row">
+            <h2 id="history-heading" class="section-display-title">Session Runs</h2>
+            <button type="button" id="clear-history-btn" class="btn btn-ghost btn-xs">Clear history</button>
+          </div>
+          <div id="history-list" class="history-list"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
