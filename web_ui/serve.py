@@ -97,6 +97,15 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
             self.wfile.write(payload)
 
 
+
+def _port_open(host: str, port: int, timeout: float = 0.35) -> bool:
+    import socket
+    try:
+        with socket.create_connection((host, port), timeout=timeout):
+            return True
+    except OSError:
+        return False
+
 def main() -> None:
     mimetypes.add_type("application/javascript", ".js")
     mimetypes.add_type("text/css", ".css")
@@ -117,6 +126,14 @@ def main() -> None:
     args = parser.parse_args()
 
     backend_proc = None
+    if args.with_backend:
+        from urllib.parse import urlparse
+        _parsed = urlparse(args.backend)
+        _b_host = _parsed.hostname or '127.0.0.1'
+        _b_port = _parsed.port or 8080
+        if _port_open(_b_host, _b_port):
+            print(f'Backend already listening at {args.backend} — reusing existing server.')
+            args.with_backend = False
     if args.with_backend:
         backend_addr = args.backend.removeprefix("http://").removeprefix("https://").split("/")[0]
         backend_proc = subprocess.Popen([sys.executable, "-m", "my_new_tool", "--server", backend_addr])
