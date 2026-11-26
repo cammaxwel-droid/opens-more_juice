@@ -193,7 +193,49 @@ async def _run(args, settings: Settings) -> None:
 
 
 async def main() -> None:
+    inp.add_argument("--ui", action="store_true", help="Launch Web Workbench UI")
+    inp.add_argument("--ui-port", type=int, default=3000, help="Workbench port")
+    inp.add_argument("--detach", action="store_true", help="Run --ui in background")
+    setup_arguments_parser().add_argument("--ui", action="store_true", help="Launch Web Workbench UI")
+    setup_arguments_parser().add_argument("--ui-port", type=int, default=3000, help="Workbench port")
+    setup_arguments_parser().add_argument("--detach", action="store_true", help="Run --ui in background")
     args = setup_arguments_parser().parse_args()
+    if getattr(args, "ui", False):
+        import pathlib as _pl, subprocess as _sp, sys as _sys, time as _time, socket as _sock, webbrowser as _wb
+        serve_py = _pl.Path(__file__).resolve().parent.parent / "web_ui" / "serve.py"
+        b_addr = getattr(args, "server", None) or "127.0.0.1:8080"
+        b_host, b_port = (b_addr.rsplit(":", 1)[0], int(b_addr.rsplit(":", 1)[1])) if ":" in str(b_addr) else (str(b_addr), 8080)
+        cmd = [_sys.executable, str(serve_py), "--port", str(args.ui_port), "--backend", f"http://{b_host}:{b_port}", "--with-backend"]
+        det = getattr(args, "detach", False)
+        fl = (getattr(_sp, "DETACHED_PROCESS", 8) | getattr(_sp, "CREATE_NEW_PROCESS_GROUP", 512)) if det else 0
+        proc = _sp.Popen(cmd, stdout=_sp.DEVNULL if det else None, stderr=_sp.DEVNULL if det else None, stdin=_sp.DEVNULL if det else None, creationflags=fl)
+        dl = _time.time() + 6.0
+        while _time.time() < dl:
+            try:
+                with _sock.create_connection((b_host, b_port), 0.25), _sock.create_connection(("127.0.0.1", args.ui_port), 0.25): break
+            except OSError: _time.sleep(0.2)
+        _wb.open(f"http://127.0.0.1:{args.ui_port}")
+        if det: print(f"Workbench running in background (PID {proc.pid}) at http://127.0.0.1:{args.ui_port}"); sys.exit(0)
+        try: sys.exit(proc.wait())
+        except KeyboardInterrupt: proc.terminate(); sys.exit(0)
+    if getattr(args, "ui", False):
+        import pathlib as _pl, subprocess as _sp, sys as _sys, time as _time, socket as _sock, webbrowser as _wb
+        serve_py = _pl.Path(__file__).resolve().parent.parent / "web_ui" / "serve.py"
+        b_addr = getattr(args, "server", None) or "127.0.0.1:8080"
+        b_host, b_port = (b_addr.rsplit(":", 1)[0], int(b_addr.rsplit(":", 1)[1])) if ":" in str(b_addr) else (str(b_addr), 8080)
+        cmd = [_sys.executable, str(serve_py), "--port", str(args.ui_port), "--backend", f"http://{b_host}:{b_port}", "--with-backend"]
+        det = getattr(args, "detach", False)
+        fl = (getattr(_sp, "DETACHED_PROCESS", 8) | getattr(_sp, "CREATE_NEW_PROCESS_GROUP", 512)) if det else 0
+        proc = _sp.Popen(cmd, stdout=_sp.DEVNULL if det else None, stderr=_sp.DEVNULL if det else None, stdin=_sp.DEVNULL if det else None, creationflags=fl)
+        dl = _time.time() + 6.0
+        while _time.time() < dl:
+            try:
+                with _sock.create_connection((b_host, b_port), 0.25), _sock.create_connection(("127.0.0.1", args.ui_port), 0.25): break
+            except OSError: _time.sleep(0.2)
+        _wb.open(f"http://127.0.0.1:{args.ui_port}")
+        if det: print(f"Workbench running in background (PID {proc.pid}) at http://127.0.0.1:{args.ui_port}"); sys.exit(0)
+        try: sys.exit(proc.wait())
+        except KeyboardInterrupt: proc.terminate(); sys.exit(0)
 
     logging.basicConfig(
         format="[%(filename)s:%(lineno)d] %(levelname)-5s %(asctime)s %(message)s",
