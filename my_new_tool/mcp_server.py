@@ -36,7 +36,7 @@ def build_server(settings: Optional[Settings] = None):
     base_settings = settings or Settings()
     discover()
 
-    server = FastMCP("osint-cli-tool-skeleton")
+    server = FastMCP("my-new-tool")
 
     def make_tool(plugin_name: str):
         async def tool(targets: List[str], options: Optional[Dict[str, Any]] = None) -> List[dict]:
