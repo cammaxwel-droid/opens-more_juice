@@ -33,9 +33,9 @@ field, so the result keeps working as a CLI, library, server and MCP server.
 You no longer edit `core.py`. Instead you add **one plugin file**:
 
 ```sh
-python -m osint_cli_tool_skeleton --new-plugin my_tool
-# edit osint_cli_tool_skeleton/plugins/my_tool.py -> implement run()
-python -m osint_cli_tool_skeleton --plugin my_tool <target>
+python -m my_new_tool --new-plugin my_tool
+# edit my_new_tool/plugins/my_tool.py -> implement run()
+python -m my_new_tool --plugin my_tool <target>
 ```
 
 See [AGENTS.md](AGENTS.md) for the full plugin contract — it doubles as the
@@ -50,7 +50,7 @@ make build           # python -m build -> dist/
 ```
 
 To publish to PyPI:
-1. Bump the version in `osint_cli_tool_skeleton/_version.py`.
+1. Bump the version in `my_new_tool/_version.py`.
 2. Add `PYPI_USERNAME` / `PYPI_PASSWORD` to the repo secrets.
 3. Create a GitHub release — the `Upload Python Package` workflow builds and
    uploads automatically.

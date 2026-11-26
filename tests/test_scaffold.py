@@ -1,7 +1,7 @@
 import pytest
 
-from osint_cli_tool_skeleton.plugin import all_plugins, load_path
-from osint_cli_tool_skeleton.scaffold import new_plugin
+from my_new_tool.plugin import all_plugins, load_path
+from my_new_tool.scaffold import new_plugin
 
 
 def test_new_plugin_writes_loadable_file(tmp_path):

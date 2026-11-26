@@ -5,12 +5,12 @@ Exposes every registered plugin over a JSON API with automatic OpenAPI docs at
 ``/docs``. Build the app for your own ASGI deployment::
 
     # myapp.py
-    from osint_cli_tool_skeleton.server import create_app
+    from my_new_tool.server import create_app
     app = create_app()          # uvicorn myapp:app --host 0.0.0.0 --port 8080
 
-or run it from the CLI: ``osint_cli_tool_skeleton --server 0.0.0.0:8080``.
+or run it from the CLI: ``my_new_tool --server 0.0.0.0:8080``.
 
-FastAPI/uvicorn are optional extras: ``pip install 'osint_cli_tool_skeleton[server]'``.
+FastAPI/uvicorn are optional extras: ``pip install 'my_new_tool[server]'``.
 """
 # NB: deliberately NOT using `from __future__ import annotations` here — FastAPI
 # must see the real RunRequest class (not a string forward-ref) to treat it as a
@@ -30,7 +30,7 @@ def _require_fastapi():
     except ModuleNotFoundError as exc:  # pragma: no cover
         raise SystemExit(
             "The HTTP server needs extra packages. Install them with:\n"
-            "    pip install 'osint_cli_tool_skeleton[server]'"
+            "    pip install 'my_new_tool[server]'"
         ) from exc
 
 
@@ -46,7 +46,7 @@ def create_app(settings: Optional[Settings] = None):
     app = FastAPI(
         title="osint-cli-tool-skeleton",
         description="Universal OSINT tool — every plugin is an endpoint.",
-        version=__import__("osint_cli_tool_skeleton")._version.__version__,
+        version=__import__("my_new_tool")._version.__version__,
     )
 
     class RunRequest(BaseModel):
@@ -127,7 +127,7 @@ async def serve(addr: str, settings: Optional[Settings] = None) -> None:
     try:
         import uvicorn
     except ModuleNotFoundError as exc:  # pragma: no cover
-        raise SystemExit("Install uvicorn: pip install 'osint_cli_tool_skeleton[server]'") from exc
+        raise SystemExit("Install uvicorn: pip install 'my_new_tool[server]'") from exc
 
     host, _, port = addr.partition(":")
     app = create_app(settings)

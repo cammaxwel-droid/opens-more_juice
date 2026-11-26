@@ -1,10 +1,10 @@
 """
 Generate a new plugin file from a template.
 
-Used by ``osint_cli_tool_skeleton --new-plugin <name>`` and importable for
+Used by ``my_new_tool --new-plugin <name>`` and importable for
 programmatic/agent use::
 
-    from osint_cli_tool_skeleton.scaffold import new_plugin
+    from my_new_tool.scaffold import new_plugin
     path = new_plugin("shodan_lookup")
 """
 from __future__ import annotations
@@ -20,7 +20,7 @@ TODO: describe what this tool does and which target type it expects.
 """
 from __future__ import annotations
 
-from osint_cli_tool_skeleton import InputData, Plugin, Result
+from my_new_tool import InputData, Plugin, Result
 
 
 class {class_name}(Plugin):

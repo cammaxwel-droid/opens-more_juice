@@ -2,11 +2,11 @@
 MCP server — exposes every plugin as a Model Context Protocol tool.
 
 This is what makes the skeleton AI-native: point an MCP-capable agent at
-``osint_cli_tool_skeleton --mcp`` and every registered plugin shows up as a
+``my_new_tool --mcp`` and every registered plugin shows up as a
 callable tool named after it, taking ``targets`` (and optional ``options``).
 
 The ``mcp`` package is an optional extra:
-``pip install 'osint_cli_tool_skeleton[mcp]'``.
+``pip install 'my_new_tool[mcp]'``.
 """
 from __future__ import annotations
 
@@ -24,7 +24,7 @@ def _require_mcp():
     except ModuleNotFoundError as exc:  # pragma: no cover
         raise SystemExit(
             "The MCP server needs the `mcp` package. Install it with:\n"
-            "    pip install 'osint_cli_tool_skeleton[mcp]'"
+            "    pip install 'my_new_tool[mcp]'"
         ) from exc
 
 

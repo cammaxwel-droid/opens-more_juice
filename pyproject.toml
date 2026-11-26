@@ -3,7 +3,7 @@ requires = ["setuptools>=84.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "osint_cli_tool_skeleton"
+name = "my_new_tool"
 description = "A universal, AI-native skeleton for OSINT CLI tools, libraries, microservices and MCP servers."
 readme = "README.md"
 license = { text = "MIT" }
@@ -59,13 +59,13 @@ Homepage = "https://github.com/soxoj/osint-cli-tool-skeleton"
 Repository = "https://github.com/soxoj/osint-cli-tool-skeleton"
 
 [project.scripts]
-osint_cli_tool_skeleton = "osint_cli_tool_skeleton.cli:run"
+my_new_tool = "my_new_tool.cli:run"
 
 [tool.setuptools.dynamic]
-version = { attr = "osint_cli_tool_skeleton._version.__version__" }
+version = { attr = "my_new_tool._version.__version__" }
 
 [tool.setuptools.packages.find]
-include = ["osint_cli_tool_skeleton*"]
+include = ["my_new_tool*"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

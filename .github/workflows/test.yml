@@ -23,6 +23,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -e '.[all,dev]'
     - name: Lint (syntax errors only, fail build)
-      run: flake8 --count --select=E9,F63,F7,F82 --show-source --statistics osint_cli_tool_skeleton
+      run: flake8 --count --select=E9,F63,F7,F82 --show-source --statistics my_new_tool
     - name: Test
       run: pytest -q

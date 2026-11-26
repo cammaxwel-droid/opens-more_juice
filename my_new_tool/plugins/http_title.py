@@ -7,7 +7,7 @@ This is the reference for how a real OSINT plugin looks: one class, one
 """
 from __future__ import annotations
 
-from osint_cli_tool_skeleton import InputData, Plugin, Result
+from my_new_tool import InputData, Plugin, Result
 
 
 class HttpTitle(Plugin):

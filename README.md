@@ -53,8 +53,8 @@ AI agents — with concurrency, proxying, reports and config handled for you.
 
 ```sh
 pip install -e .
-python -m osint_cli_tool_skeleton --list-plugins
-python -m osint_cli_tool_skeleton --plugin http_title example.com reddit.com
+python -m my_new_tool --list-plugins
+python -m my_new_tool --plugin http_title example.com reddit.com
 ```
 
 ```
@@ -69,12 +69,12 @@ Total found: 1
 ## Write a tool (the only thing you edit)
 
 ```sh
-python -m osint_cli_tool_skeleton --new-plugin my_tool
+python -m my_new_tool --new-plugin my_tool
 ```
 
 ```python
-# osint_cli_tool_skeleton/plugins/my_tool.py
-from osint_cli_tool_skeleton import InputData, Plugin, Result
+# my_new_tool/plugins/my_tool.py
+from my_new_tool import InputData, Plugin, Result
 
 class MyTool(Plugin):
     name = "my_tool"
@@ -92,9 +92,9 @@ an MCP tool. Full contract in [AGENTS.md](AGENTS.md).
 <summary><b>Inputs</b> — args, file, or stdin</summary>
 
 ```sh
-osint_cli_tool_skeleton a.com b.com c.com          # positional
-osint_cli_tool_skeleton --target-list targets.txt  # from a file
-cat list.txt | osint_cli_tool_skeleton --targets-from-stdin
+my_new_tool a.com b.com c.com          # positional
+my_new_tool --target-list targets.txt  # from a file
+cat list.txt | my_new_tool --targets-from-stdin
 ```
 </details>
 
@@ -102,8 +102,8 @@ cat list.txt | osint_cli_tool_skeleton --targets-from-stdin
 <summary><b>Reports</b> — console, CSV, TXT, JSON</summary>
 
 ```sh
-osint_cli_tool_skeleton a.com b.com -oC out.csv -oJ out.json -oT out.txt
-osint_cli_tool_skeleton a.com --format json        # JSON to stdout
+my_new_tool a.com b.com -oC out.csv -oJ out.json -oT out.txt
+my_new_tool a.com --format json        # JSON to stdout
 ```
 
 Reports are schema-driven: columns/fields adapt to whatever your plugin emits.
@@ -117,13 +117,13 @@ $ cat out.json | jq '.[0]'
 <summary><b>Library</b> — embed in your own code / pipeline</summary>
 
 ```python
-from osint_cli_tool_skeleton import run_tool          # sync
+from my_new_tool import run_tool          # sync
 results = run_tool("http_title", ["example.com"], proxy="socks5://127.0.0.1:1080")
 for rs in results:
     print(rs.input_data, [r.fields for r in rs.results])
 
 # inside an existing event loop:
-from osint_cli_tool_skeleton import arun_tool
+from my_new_tool import arun_tool
 results = await arun_tool("http_title", ["example.com"])
 ```
 </details>
@@ -133,7 +133,7 @@ results = await arun_tool("http_title", ["example.com"])
 
 ```sh
 pip install -e '.[server]'
-osint_cli_tool_skeleton --server 0.0.0.0:8080      # docs at /docs
+my_new_tool --server 0.0.0.0:8080      # docs at /docs
 ```
 
 ```sh
@@ -143,7 +143,7 @@ curl localhost:8080/plugins/http_title/run \
 
 Endpoints: `GET /plugins`, `GET /plugins/{name}/schema`,
 `POST /plugins/{name}/run`, `POST /run`. For your own ASGI deployment:
-`from osint_cli_tool_skeleton.server import create_app; app = create_app()`.
+`from my_new_tool.server import create_app; app = create_app()`.
 
 Or run it in Docker:
 ```sh
@@ -156,12 +156,12 @@ docker build -t osint-tool . && docker run -p 8080:8080 osint-tool
 
 ```sh
 pip install -e '.[mcp]'
-osint_cli_tool_skeleton --mcp        # stdio MCP server
+my_new_tool --mcp        # stdio MCP server
 ```
 
 Every plugin becomes an MCP tool named after it, taking `targets` and optional
 `options`. Register it with your agent/host as the command
-`osint_cli_tool_skeleton --mcp`.
+`my_new_tool --mcp`.
 </details>
 
 <details>
@@ -180,8 +180,8 @@ api_key = "..."
 ```
 
 ```sh
-OSINT_PROXY=socks5://127.0.0.1:1080 osint_cli_tool_skeleton example.com
-osint_cli_tool_skeleton --plugin my_tool --option api_key=XXX --concurrency 20 t
+OSINT_PROXY=socks5://127.0.0.1:1080 my_new_tool example.com
+my_new_tool --plugin my_tool --option api_key=XXX --concurrency 20 t
 ```
 
 See [`examples/osint.example.toml`](examples/osint.example.toml).
@@ -192,8 +192,8 @@ See [`examples/osint.example.toml`](examples/osint.example.toml).
 Requires Python ≥ 3.10.
 
 ```sh
-pip install osint_cli_tool_skeleton            # from PyPI (core)
-pip install 'osint_cli_tool_skeleton[all]'     # + server, mcp, yaml
+pip install my_new_tool            # from PyPI (core)
+pip install 'my_new_tool[all]'     # + server, mcp, yaml
 ```
 
 …or clone and `pip install -e '.[all,dev]'`. Details in [INSTALL.md](INSTALL.md).

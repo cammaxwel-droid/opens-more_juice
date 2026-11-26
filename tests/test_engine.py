@@ -1,7 +1,7 @@
 """Engine / plugin run tests. All offline via the bundled `string_info` plugin."""
 import pytest
 
-from osint_cli_tool_skeleton import (
+from my_new_tool import (
     InputData,
     Plugin,
     Result,

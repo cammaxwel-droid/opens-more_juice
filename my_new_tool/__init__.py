@@ -1,9 +1,9 @@
 """
-osint_cli_tool_skeleton — a universal, AI-native skeleton for OSINT tools.
+my_new_tool — a universal, AI-native skeleton for OSINT tools.
 
 Public API (stable):
 
-    from osint_cli_tool_skeleton import Plugin, Result, run_tool
+    from my_new_tool import Plugin, Result, run_tool
 
     class MyTool(Plugin):
         name = "my_tool"
@@ -50,7 +50,7 @@ __all__ = [
 
 
 def __getattr__(name):
-    # Lazy re-exports so `import osint_cli_tool_skeleton` stays light and free
+    # Lazy re-exports so `import my_new_tool` stays light and free
     # of an import cycle with engine.py (which imports this package).
     if name in ("run_tool", "arun_tool", "Engine", "RunContext"):
         from . import engine

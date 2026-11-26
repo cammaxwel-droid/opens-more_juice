@@ -6,7 +6,7 @@ Write a plugin by subclassing :class:`Plugin`, giving it a ``name`` and
 importing the module registers it, after which it is automatically available
 on the CLI (``--plugin <name>``), over HTTP and as an MCP tool.
 
-    from osint_cli_tool_skeleton import Plugin, Result
+    from my_new_tool import Plugin, Result
 
     class MyTool(Plugin):
         name = "my_tool"
@@ -186,7 +186,7 @@ def load_path(path: str) -> None:
     importlib.import_module(path)
 
 
-def load_entry_points(group: str = "osint_cli_tool_skeleton.plugins") -> None:
+def load_entry_points(group: str = "my_new_tool.plugins") -> None:
     """Load third-party plugins advertised via packaging entry points."""
     try:
         from importlib.metadata import entry_points

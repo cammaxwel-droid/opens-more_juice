@@ -2,8 +2,8 @@ import csv
 import io
 import json
 
-from osint_cli_tool_skeleton import InputData, Result, ResultSet
-from osint_cli_tool_skeleton import report
+from my_new_tool import InputData, Result, ResultSet
+from my_new_tool import report
 
 
 def _sample():

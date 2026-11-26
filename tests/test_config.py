@@ -1,5 +1,5 @@
-from osint_cli_tool_skeleton import Settings
-from osint_cli_tool_skeleton.config import _coerce
+from my_new_tool import Settings
+from my_new_tool.config import _coerce
 
 
 def test_defaults():

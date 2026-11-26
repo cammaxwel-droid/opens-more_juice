@@ -18,21 +18,21 @@ Importing it registers it, after which it is automatically exposed everywhere.
 
 | File | Responsibility | Touch it? |
 |------|----------------|-----------|
-| `osint_cli_tool_skeleton/plugins/*.py` | **Your tools.** One class per file. | ✅ This is your work. |
-| `osint_cli_tool_skeleton/plugin.py` | `Plugin` base class + registry + discovery. | ❌ Read only. |
-| `osint_cli_tool_skeleton/engine.py` | Runs plugins concurrently; `RunContext` (HTTP/proxy/options). | ❌ Read only. |
-| `osint_cli_tool_skeleton/schema.py` | `InputData`, `Result`, `ResultSet`. | ❌ Read only. |
-| `osint_cli_tool_skeleton/config.py` | `Settings` (defaults < file < env < CLI). | ❌ Read only. |
-| `osint_cli_tool_skeleton/report.py` | plain/txt/csv/json reporters. | ➕ Add a format by subclassing `Reporter`. |
-| `osint_cli_tool_skeleton/cli.py` / `server.py` / `mcp_server.py` | CLI / HTTP / MCP frontends. | ❌ Read only. |
+| `my_new_tool/plugins/*.py` | **Your tools.** One class per file. | ✅ This is your work. |
+| `my_new_tool/plugin.py` | `Plugin` base class + registry + discovery. | ❌ Read only. |
+| `my_new_tool/engine.py` | Runs plugins concurrently; `RunContext` (HTTP/proxy/options). | ❌ Read only. |
+| `my_new_tool/schema.py` | `InputData`, `Result`, `ResultSet`. | ❌ Read only. |
+| `my_new_tool/config.py` | `Settings` (defaults < file < env < CLI). | ❌ Read only. |
+| `my_new_tool/report.py` | plain/txt/csv/json reporters. | ➕ Add a format by subclassing `Reporter`. |
+| `my_new_tool/cli.py` / `server.py` / `mcp_server.py` | CLI / HTTP / MCP frontends. | ❌ Read only. |
 
 ## How to add a plugin
 
 1. Scaffold a file:
    ```sh
-   python -m osint_cli_tool_skeleton --new-plugin <name>
+   python -m my_new_tool --new-plugin <name>
    ```
-   This writes `osint_cli_tool_skeleton/plugins/<name>.py`.
+   This writes `my_new_tool/plugins/<name>.py`.
 2. Open it and fill in:
    - `name` — unique id (snake_case). This becomes `--plugin <name>`, the HTTP
      route `/plugins/<name>/run`, and the MCP tool name.
@@ -41,12 +41,12 @@ Importing it registers it, after which it is automatically exposed everywhere.
      fields, so agents/clients know the output shape.
    - `default_options` (optional) — defaults overridable via config/CLI/API.
    - `async def run(self, target)` — **the logic**.
-3. Run it: `python -m osint_cli_tool_skeleton --plugin <name> <target>`
+3. Run it: `python -m my_new_tool --plugin <name> <target>`
 
 ## The `run(self, target)` contract
 
 ```python
-from osint_cli_tool_skeleton import InputData, Plugin, Result
+from my_new_tool import InputData, Plugin, Result
 
 class MyTool(Plugin):
     name = "my_tool"
@@ -85,9 +85,9 @@ unless you have a reason.
 ## Verifying your work
 
 ```sh
-python -m osint_cli_tool_skeleton --list-plugins              # your plugin appears
-python -m osint_cli_tool_skeleton --plugin <name> --schema    # I/O schema is sane
-python -m osint_cli_tool_skeleton --plugin <name> <target>    # it runs
+python -m my_new_tool --list-plugins              # your plugin appears
+python -m my_new_tool --plugin <name> --schema    # I/O schema is sane
+python -m my_new_tool --plugin <name> <target>    # it runs
 pytest -q                                                     # tests pass
 ```
 
@@ -104,4 +104,4 @@ plugin path (see `plugins/string_info.py`) so CI needs no network.
 ## Renaming the project for distribution
 
 `python prepare.py` renames the package (and updates imports, docs and
-packaging) from `osint_cli_tool_skeleton` to your project's name.
+packaging) from `my_new_tool` to your project's name.

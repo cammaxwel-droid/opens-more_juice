@@ -14,7 +14,7 @@ import re
 import shutil
 import sys
 
-OLD_NAME = "osint_cli_tool_skeleton"
+OLD_NAME = "my_new_tool"
 # Extensions whose contents get the textual replacement.
 TEXT_EXTS = {".py", ".md", ".toml", ".cfg", ".txt", ".yml", ".yaml", ".in"}
 # Directories to skip while walking.

@@ -1,6 +1,6 @@
 import json
 
-from osint_cli_tool_skeleton import InputData, Result, ResultSet, dumps
+from my_new_tool import InputData, Result, ResultSet, dumps
 
 
 def test_result_arbitrary_fields():

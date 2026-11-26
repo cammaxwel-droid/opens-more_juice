@@ -8,7 +8,7 @@ receives (``self.ctx``) to talk to the network and read its options.
 Most callers never touch these directly — use the module-level helpers
 :func:`run_tool` (sync) and :func:`arun_tool` (async)::
 
-    from osint_cli_tool_skeleton import run_tool
+    from my_new_tool import run_tool
     results = run_tool("http_title", ["example.com", "reddit.com"])
     for rs in results:
         print(rs.input_data, [r.fields for r in rs.results])
